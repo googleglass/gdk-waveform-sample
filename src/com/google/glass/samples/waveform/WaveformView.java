@@ -30,7 +30,15 @@ import android.view.SurfaceView;
  */
 public class WaveformView extends SurfaceView {
 
+  // The number of buffer frames to keep around (for a nice fade-out
+  // visualization.
   private static final int HISTORY_SIZE = 6;
+  
+  // To make quieter sounds still show up well on the display, we use
+  // +/- 8192 as the amplitude that reaches the top/bottom of the view
+  // instead of +/- 32767. Any samples that have magnitude higher than this
+  // limit will simply be clipped during drawing.
+  private static final float MAX_AMPLITUDE_TO_DRAW = 8192.0f;
 
   // The queue that will hold historical audio data.
   private LinkedList<short[]> mAudioData;
@@ -71,8 +79,7 @@ public class WaveformView extends SurfaceView {
     if (mAudioData.size() == HISTORY_SIZE) {
       newBuffer = mAudioData.removeFirst();
       System.arraycopy(buffer, 0, newBuffer, 0, buffer.length);
-    }
-    else {
+    } else {
       newBuffer = buffer.clone();
     }
 
@@ -105,7 +112,7 @@ public class WaveformView extends SurfaceView {
     int brightness = colorDelta;
 
     for (short[] buffer : mAudioData) {
-      mPaint.setColor(Color.argb(brightness, 255, 255, 255));
+      mPaint.setColor(Color.argb(brightness, 128, 255, 192));
 
       float lastX = -1;
       float lastY = -1;
@@ -115,12 +122,7 @@ public class WaveformView extends SurfaceView {
       for (int x = 0; x < width; x++) {
         int index = (int) ((x / width) * buffer.length);
         short sample = buffer[index];
-        
-        // Based on experimentation, we use +/- 16384 as the amplitude that
-        // reaches the top/bottom of the view instead of +/- 32767. Any
-        // samples that have magnitude higher than this limit will simply be
-        // clipped during drawing.
-        float y = (sample / 16384.0f) * centerY + centerY;
+        float y = (sample / MAX_AMPLITUDE_TO_DRAW) * centerY + centerY;
 
         if (lastX != -1) {
           canvas.drawLine(lastX, lastY, x, y, mPaint);

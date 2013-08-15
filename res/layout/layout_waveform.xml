@@ -15,9 +15,9 @@
         android:id="@+id/decibelView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|right"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="@dimen/footer_right_margin"
+        android:layout_marginBottom="@dimen/footer_bottom_margin"
+        android:textSize="@dimen/footer_text_size" />
     
 </FrameLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="footer_right_margin">40px</dimen>
+    <dimen name="footer_bottom_margin">29px</dimen>
+    <dimen name="footer_text_size">30px</dimen>
+</resources>
